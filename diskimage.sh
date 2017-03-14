@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ $(dpkg-query -W -f='${Status}' sshfs 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  apt-get install sshfs;
+fi
+
 MOUNT=/mnt/Backup
 
 mount -a
