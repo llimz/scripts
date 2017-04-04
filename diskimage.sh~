@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [[ "$#" -eq 0 ]]; then
+ echo 'usage diskimage.sh +image_file_name_without_extension'
+ exit 1
+fi
+
+if [ $(dpkg-query -W -f='${Status}' sshfs 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  apt-get install sshfs;
+fi
+
+REBOOT=0
+for i in "$@" ; do
+    if [[ $i == "-r" ]]; then
+	REBOOT=1
+    else
+	NAME=$i
+    fi
+done
+
+echo 'Disk image name '$NAME
+echo 'Reboot? '$REBOOT
+exit 0
+
+MOUNT=/mnt/Backup
+
+mount -a
+sshfs -o noatime,noexec,allow_other root@192.168.0.7:/mnt/HD/HD_a2/Backup/ $MOUNT
+sleep 5
+
+#pv -tpreb /dev/mmcblk0p2 | dd bs=1M | gzip -c > $MOUNT/rasprdc.img.gz
+dd if=/dev/mmcblk0p2 bs=1M | gzip -c > $MOUNT/$NAME.img.gz
+
+fusermount -u $MOUNT
