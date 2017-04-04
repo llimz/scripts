@@ -48,7 +48,7 @@ if [ $? -ne 0 ]; then exit $?; fi
 sleep 5
 
 #make the diskimage
-#dd if=/dev/mmcblk0p2 bs=1M | gzip -c > $MOUNT/$NAME.img.gz
+dd if=/dev/mmcblk0p2 bs=1M | gzip -c > $MOUNT/$NAME.img.gz
 sleep 10
 
 #unmount the backup folder
