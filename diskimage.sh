@@ -1,5 +1,6 @@
 #!/bin/bash
 
+SHUTDOWN=0
 REBOOT=0
 while test $# -gt 0; do
         case "$1" in
@@ -10,6 +11,10 @@ while test $# -gt 0; do
                 -r)
                         shift
 			export REBOOT=1
+                        ;;
+                -s)
+                        shift
+                        export SHUTDOWN=1
                         ;;
                 -m)
                         shift
@@ -56,4 +61,8 @@ fusermount -u $MOUNT
 
 if [ $REBOOT -eq 1 ]; then
 	/sbin/shutdown -r now
+fi
+
+if [ $SHUTDOWN -eq 1 ]; then
+        /sbin/shutdown now
 fi
